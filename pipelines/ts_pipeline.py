@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Matched-filter orchestration wrapper for the moving-lens workflow.
 
-The portfolio repository intentionally does not bundle the research ThumbStack
-checkout. Point this script to a compatible local checkout with
-``--thumbstack-root`` or the ``THUMBSTACK_ROOT`` environment variable.
+Point this script to a compatible ThumbStack checkout with ``--thumbstack-root``
+or the ``THUMBSTACK_ROOT`` environment variable.
 """
 
 from __future__ import annotations
@@ -57,7 +56,7 @@ def install_enmap_at_shim() -> None:
 
 
 def load_thumbstack_modules(thumbstack_root: str):
-    """Load the external research dependency only when the filter stage runs."""
+    """Load ThumbStack modules when the filter stage runs."""
     if not thumbstack_root:
         raise ValueError(
             "No ThumbStack checkout configured. Supply --thumbstack-root or set "

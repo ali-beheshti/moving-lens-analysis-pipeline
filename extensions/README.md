@@ -1,24 +1,28 @@
-# Moving-lens ThumbStack extensions
+# Moving-Lens Filter Extensions
 
-The private research workflow used a modified checkout of
-[ThumbStack](https://github.com/EmmanuelSchaan/ThumbStack) to extract transverse
-moving-lens observables from sky maps.
+This directory contains the moving-lens filtering and template modules used by the analysis pipeline.
 
-This public portfolio repository **does not redistribute the full upstream
-ThumbStack source tree**. Instead, this directory contains compact standalone
-implementations of the moving-lens-specific ideas added for the project:
+## Directional filters
 
-- phi/theta directional dipole filters;
-- radial matched-filter templates;
-- 90-degree rotated null filters;
-- gradient-nulled matched-filter variants; and
-- transverse-velocity moving-lens temperature templates.
+`moving_lens_filters.py` implements the transverse filter family used to measure the two local moving-lens components:
 
-The production research version integrated these features into the ThumbStack
-cutout/filtering workflow and added compatibility/orchestration code for modern
-NumPy/pixell environments. The public implementations here are intended to make
-those contributions inspectable without bundling unrelated legacy code,
-collaboration data, or research calibration products.
+- `phimatched`
+- `thetamatched`
+- `phimatchedrot90`
+- `thetamatchedrot90`
+- `phimatchedNullGrad`
+- `thetamatchedNullGrad`
+- `phimatchedrot90NullGrad`
+- `thetamatchedrot90NullGrad`
 
-For the original stacking framework and citation information, see the upstream
-ThumbStack repository.
+The filters support radial matched-filter profiles, 90° rotations for null tests, and gradient-nulled variants for suppressing large-scale gradient contamination.
+
+## Moving-lens template
+
+`moving_lens_template.py` constructs the temperature dipole produced by transverse motion for a supplied radial deflection profile and transverse velocity components.
+
+## Pipeline integration
+
+The filtering stage is orchestrated by `pipelines/ts_pipeline.py`, which connects these moving-lens components to the ThumbStack map/catalog workflow. Filter outputs are then passed to `pipelines/mpv_pipeline.py` for the pairwise-velocity analysis.
+
+See `docs/moving_lens_extensions.md` for additional implementation notes.

@@ -80,11 +80,10 @@ import numpy as np
 #           mpv_pipeline.py
 #       outputs/
 #
-# The public portfolio version does not bundle the external ThumbStack source.
 
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
-# Optional external ThumbStack checkout used by the research-data path.
+# Optional ThumbStack checkout used by the filtering/catalog path.
 DEFAULT_THUMBSTACK_DIR = os.environ.get("THUMBSTACK_ROOT", "")
 
 DEFAULT_CATALOG_NAME = "example_catalog"
@@ -96,7 +95,7 @@ DEFAULT_MAP_TAG = "unknownmap"
 DEFAULT_OUTPUT_PARENT = os.path.join(REPO_ROOT, "outputs")
 
 # multiplicative factors to convert TS theta/phi filter outputs into velocity units.
-# Portfolio-safe defaults. Supply research calibration factors explicitly when needed.
+# Default scale factors are unity; supply calibrated factors explicitly when needed.
 DEFAULT_VPH_SCALE = 1.0
 DEFAULT_VTH_SCALE = 1.0
 
@@ -139,9 +138,9 @@ def parse_bins(args: argparse.Namespace) -> np.ndarray:
 
 
 def default_ts_paths(ts_dir: str, theta_name: str, phi_name: str) -> tuple[str, str, str]:
-    """Return default theta, phi, and mask paths from the cleaned TS pipeline output folder.
+    """Return default theta, phi, and mask paths from a TS pipeline output folder.
 
-    The cleaned TS pipeline writes compact names inside a descriptive directory, e.g.
+    The TS pipeline writes compact names inside a descriptive directory, e.g.
 
       ts__map_example_map__cat_example_catalog/
           metadata.npz
@@ -157,7 +156,7 @@ def default_ts_paths(ts_dir: str, theta_name: str, phi_name: str) -> tuple[str, 
 
 
 def derive_mpv_outdir_from_ts_dir(ts_dir: str) -> str:
-    """Derive a default MPV output directory from a cleaned TS output directory.
+    """Derive a default MPV output directory from a TS output directory.
 
     Example:
       outputs/ts__map_example_map__cat_example_catalog
@@ -200,7 +199,7 @@ def setup_thumbstack(thumbstack_dir: str):
     if not thumbstack_dir:
         raise ValueError(
             "No ThumbStack checkout configured. Supply --thumbstack-dir, set "
-            "THUMBSTACK_ROOT, or use --catalog-npz for the standalone public workflow."
+            "THUMBSTACK_ROOT, or use --catalog-npz with a catalog file."
         )
     thumbstack_dir = os.path.abspath(os.path.expanduser(thumbstack_dir))
     if not os.path.isdir(thumbstack_dir):
@@ -214,7 +213,7 @@ def setup_thumbstack(thumbstack_dir: str):
 
 
 def _read_catalog_npz(path: str) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Read a minimal public catalog file containing sky position and redshift.
+    """Read a catalog file containing sky position and redshift.
 
     Accepted key sets are either:
       ra_deg, dec_deg, redshift
@@ -359,9 +358,9 @@ def load_survivor_indices(
     mask_mode: str = "intersection",
 ) -> np.ndarray:
     """
-    Load the cleaned TS post-outlier masks and return idx_keep.
+    Load the TS post-outlier masks and return idx_keep.
 
-    The cleaned TS pipeline saves keys named by filter output, e.g.
+    The TS pipeline saves keys named by filter output, e.g.
       mask_post_outlier_thetamatched
       mask_post_outlier_phimatched
 
@@ -961,14 +960,14 @@ def build_parser() -> argparse.ArgumentParser:
     p_chunk.add_argument(
         "--ts-dir",
         required=True,
-        help="Path to a cleaned TS output directory, e.g. outputs/ts__map_<map>__cat_<catalog>.",
+        help="Path to a TS output directory, e.g. outputs/ts__map_<map>__cat_<catalog>.",
     )
     p_chunk.add_argument("--catalog-name", default=DEFAULT_CATALOG_NAME)
     p_chunk.add_argument("--map-tag", default=DEFAULT_MAP_TAG, help="Saved as metadata only; TS output filenames no longer need this.")
     p_chunk.add_argument("--theta-filter-name", default="thetamatched", help="Basename of theta TS output and mask suffix.")
     p_chunk.add_argument("--phi-filter-name", default="phimatched", help="Basename of phi TS output and mask suffix.")
 
-    # Explicit paths override the cleaned TS convention.
+    # Explicit paths override the default TS output convention.
     p_chunk.add_argument("--theta-path", default=None, help="Optional explicit path to theta .npy; default is TS_DIR/thetamatched.npy")
     p_chunk.add_argument("--phi-path", default=None, help="Optional explicit path to phi .npy; default is TS_DIR/phimatched.npy")
     p_chunk.add_argument("--mask-path", default=None, help="Optional explicit path to masks .npz; default is TS_DIR/thumbstack_masks.npz")
