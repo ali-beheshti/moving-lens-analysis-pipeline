@@ -6,6 +6,11 @@ The workflow combines directional matched filtering, large-catalog pairwise esti
 
 **Tech:** Python, NumPy, SciPy, Astropy, cKDTree, Slurm/HPC
 
+<p align="center">
+  <img src="assets/pairwise_velocity.gif" alt="Pairwise velocity estimator illustration" width="650">
+</p>
+<p align="center"><em>Schematic of the pairwise velocity contribution from a pair of objects.</em></p>
+
 ## Features
 
 - **Directional matched filtering** for the two transverse moving-lens components
@@ -81,7 +86,7 @@ bash examples/run_demo.sh
 
 The demo generates a mock catalog and transverse-filter outputs, computes the MPV, runs shuffled null realizations, and builds a covariance matrix.
 
-The moving-lens filter and template modules can also be exercised directly:
+The moving-lens filter and template extensions can also be exercised directly:
 
 ```bash
 python examples/demo_moving_lens_extensions.py
@@ -130,18 +135,8 @@ Shuffle realizations use the same estimator with deterministic velocity permutat
 
 ## ThumbStack integration
 
-The filtering stage integrates with [ThumbStack](https://github.com/EmmanuelSchaan/ThumbStack) and adds the directional moving-lens filters and transverse-velocity templates used by this analysis. The corresponding filter logic is implemented in `extensions/`, while `pipelines/ts_pipeline.py` handles map/catalog orchestration and output preparation for the MPV stage.
-
-Set `THUMBSTACK_ROOT` to a compatible ThumbStack checkout when running the filtering stage:
-
-```bash
-export THUMBSTACK_ROOT=/path/to/thumbstack
-```
-
-## HPC / Slurm
-
-The `slurm/` directory contains job templates for the filtering stage, true MPV chunks, shuffled/null chunks, and final aggregation. See `docs/slurm_usage.md` for the workflow.
+The filtering workflow extends the [ThumbStack](https://github.com/EmmanuelSchaan/ThumbStack) framework for moving-lens measurements. The moving-lens-specific filtering and template logic is available in `extensions/`, while `pipelines/ts_pipeline.py` provides the orchestration layer used with a compatible ThumbStack checkout.
 
 ## Data
 
-The synthetic example is self-contained. Production analyses require the corresponding sky maps, masks, object catalogs, and calibration inputs.
+Survey maps, catalogs, and collaboration data products are not distributed with this repository. The included synthetic example provides a self-contained way to exercise the main analysis workflow.
