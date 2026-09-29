@@ -24,27 +24,22 @@ The workflow combines directional matched filtering, large-catalog pairwise esti
 
 ## Pipeline
 
-```text
-sky map + mask + object catalog
-             |
-             v
-   directional filtering
-  (phi / theta components)
-             |
-             v
-   filtered object catalog
-             |
-             v
- chunked pairwise estimator
-      (cKDTree queries)
-             |
-       +-----+------+
-       |            |
-       v            v
-   true MPV      shuffled MPV
-                    |
-                    v
-          covariance / errors
+```mermaid
+flowchart TD
+    A[Sky map + mask + object catalog]
+    B[Directional filtering<br/>φ / θ components]
+    C[Filtered object catalog]
+    D[Chunked pairwise estimator<br/>cKDTree queries]
+    E[True MPV]
+    F[Shuffled MPV]
+    G[Covariance / errors]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    D --> F
+    F --> G
 ```
 
 ## Repository structure
