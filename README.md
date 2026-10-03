@@ -4,7 +4,7 @@ Python/HPC pipeline for extracting **moving-lens signals** from sky maps and est
 
 The workflow combines directional matched filtering, large-catalog pairwise estimation, null tests, covariance estimation, and distributed computation.
 
-**Tech:** Python, NumPy, SciPy, Astropy, cKDTree, Slurm/HPC
+**Tech:** Python, pandas, NumPy, SciPy, Astropy, cKDTree, Slurm/HPC
 
 <p align="center">
   <img src="assets/pairwise_velocity.gif" alt="Pairwise velocity estimator illustration" width="650">
